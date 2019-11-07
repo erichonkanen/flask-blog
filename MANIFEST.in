@@ -1,0 +1,3 @@
+include src/landshare/schema.sql
+graft src
+global-exclude *.pyc
