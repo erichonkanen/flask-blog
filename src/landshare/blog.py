@@ -1,6 +1,7 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
+from marshmallow_jsonapi import fields, Schema
 from werkzeug.exceptions import abort
 
 from landshare.auth import login_required
@@ -99,3 +100,19 @@ def update(id):
             return redirect(url_for('blog.index'))
 
     return render_template('blog/update.html', post=post)
+
+
+@bp.route('/json', methods=('GET',))
+def json():
+    class JSONSchema(Schema):
+        id = fields.Str()
+        title = fields.Str()
+
+        class Meta:
+            type_ = 'json'
+
+    foos = [{'id': '1', 'title': 'bob'}, {'id': '2', 'title': 'barker'}]
+
+    json_schema = JSONSchema(many=True)
+
+    return json_schema.dumps(foos)
